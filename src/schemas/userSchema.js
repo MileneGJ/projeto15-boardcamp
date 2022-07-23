@@ -1,6 +1,10 @@
 import joi from 'joi';
 
 export const userSchema = joi.object({
+    name:joi.string().required(),
+    phone:joi.string().regex(/^[0-9]{10,11}$/).required(),
+    cpf:joi.string().regex(/^[0-9]{11}$/).required(),
+    birthday:joi.date().required()
 
 })
 
