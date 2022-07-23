@@ -20,3 +20,13 @@ export async function customerVerify (req,res,next) {
         res.sendStatus(500)
     }
 }
+
+export async function getByCPF (req,res,next) {
+    const cpf = req.query.cpf
+    if(cpf.length>0){
+        res.locals.condition = `WHERE cpf LIKE ${req.query.cpf}%`
+    } else {
+        res.locals.condition = ""
+    }
+    next()
+}
