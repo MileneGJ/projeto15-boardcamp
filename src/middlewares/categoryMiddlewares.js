@@ -5,7 +5,7 @@ export async function categoryVerify(req, res, next) {
     const validation = categorySchema.validate(req.body)
     if (validation.error) {
         console.log(validation.error)
-        return res.send(validation.error.details[0].message).status(400)
+        return res.status(400).send(validation.error.details[0].message)
     }
     try {
         const foundCat = await connection.query('SELECT * from categories WHERE name=$1', [req.body.name])
