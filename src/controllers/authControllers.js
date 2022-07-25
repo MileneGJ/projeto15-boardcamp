@@ -34,7 +34,7 @@ export async function createCustomer(_,res) {
     const customer = res.locals.newUser
     try {
         await connection.query('INSERT INTO customers (name,phone,cpf,birthday) VALUES ($1,$2,$3,$4)',
-        [customer.name,customer.phone,customer.cpf,customer.birthday])
+        [customer.name,customer.phone,customer.cpf,customer.birthday.toISOString().split('T')[0]])
         res.sendStatus(201)
     } catch (error) {
         console.log(error)

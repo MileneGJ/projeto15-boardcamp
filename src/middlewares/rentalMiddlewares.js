@@ -31,5 +31,23 @@ export async function rentalVerify (req,res,next) {
         console.log(error)
         res.sendStatus(500)
     }
-    
+}
+
+export async function checkConclusion (req,res,next) {
+    const id = req.params.id
+    try {
+        const foundRental = connection.query(
+            'SELECT rentals.*,games.pricePerDay as "gamePrice" FROM rentals JOIN games ON rentals."gameId"=games.id WHERE id=$1',[id]);
+        if(!foundRental.rows[0]){
+            return res.sendStatus(404);
+        } else if(foundRental.rows.returnDate){
+            return res.sendStatus(400);
+        } else {
+            res.locals.foundRental = foundRental
+            next()
+        }
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
 }
