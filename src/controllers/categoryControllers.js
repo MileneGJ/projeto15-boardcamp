@@ -2,7 +2,8 @@ import connection from "../dbStrategy/database.js";
 
 export async function createCategory(_, res) {
     try {
-        await connection.query(`INSERT INTO categories (name) VALUES (${res.locals.newCat.name})`)
+        await connection.query('INSERT INTO categories (name) VALUES ($1)',
+        [res.locals.newCat.name])
         res.sendStatus(201)
     } catch (error) {
         console.log(error)
