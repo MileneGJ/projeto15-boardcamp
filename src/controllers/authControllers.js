@@ -10,7 +10,7 @@ export async function listCustomers(_,res) {
     }
 }
 
-export function getOneCustomer(req,res) {
+export async function getOneCustomer(req,res) {
     const id = req.params.id
     try {
         const FoundCustomer = await connection.query(`SELECT * FROM customers WHERE id=${id}`)
@@ -25,9 +25,10 @@ export function getOneCustomer(req,res) {
     }
 }
 
-export async function createCustomer(req,res) {
+export async function createCustomer(_,res) {
+    const customer = res.locals.newUser
     try {
-        await connection.query(`INSERT INTO customers (name,phone,cpf,birthday) VALUES (${req.body.name},${req.body.phone},${req.body.cpf},${req.body.birthday})`)
+        await connection.query(`INSERT INTO customers (name,phone,cpf,birthday) VALUES (${customer.name},${customer.phone},${customer.cpf},${customer.birthday})`)
         res.sendStatus(201)
     } catch (error) {
         console.log(error)
@@ -37,8 +38,9 @@ export async function createCustomer(req,res) {
 
 export async function modifyCustomer(req,res) {
     const id = req.params.id
+    const customer = res.locals.newUser
     try {
-        await connection.query(`UPDATE customers SET name=${res.locals.newUser.name},phone=${res.locals.newUser.phone},cpf=${res.locals.newUser.cpf},birthday=${res.locals.newUser.birthday} WHERE id=${id}`)
+        await connection.query(`UPDATE customers SET name=${customer.name},phone=${customer.phone},cpf=${customer.cpf},birthday=${customer.birthday} WHERE id=${id}`)
     } catch (error) {
         console.log(error)
         res.sendStatus(500)
