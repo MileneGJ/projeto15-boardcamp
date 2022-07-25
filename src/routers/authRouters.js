@@ -6,7 +6,7 @@ const router = Router()
 
 router.post('/customers',customerVerify,createCustomer)
 router.get('/customers',getByCPF,listCustomers)
-router.get('/customer/:id',getOneCustomer)
-router.put('/cutomer/:id',customerVerify,modifyCustomer)
+router.get('/customers/:id',getOneCustomer)
+router.put('/customers/:id',customerVerify,modifyCustomer)
 
 export default router;

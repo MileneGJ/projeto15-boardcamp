@@ -8,9 +8,11 @@ export async function customerVerify(req, res, next) {
         return res.send(validation.error.details[0].message).status(400)
     }
     try {
-        const foundUserID = await connection.query('SELECT id from customers WHERE cpf=$1',[req.body.cpf])
+        let foundUserID = await connection.query('SELECT id from customers WHERE cpf=$1',[req.body.cpf])
+        
         if (req.params.id) {
-            if (foundUserID.rows.length>1||!foundUserID.includes(req.params.id)) {
+            foundUserID = foundUserID.rows.map(u=>u.id)
+            if (foundUserID.length>1||!foundUserID.includes(parseInt(req.params.id))) {
                 return res.sendStatus(409);
             } else {
                 res.locals.newUser = req.body;
@@ -30,7 +32,7 @@ export async function customerVerify(req, res, next) {
     }
 }
 
-export async function getByCPF(req, res, next) {
+export function getByCPF(req, res, next) {
     const cpf = req.query.cpf
     if (cpf?.length > 0) {
         res.locals.condition = req.query.cpf

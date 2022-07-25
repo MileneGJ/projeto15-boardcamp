@@ -4,7 +4,7 @@ export async function listCustomers(_,res) {
     let AllCustomers
     try {
         if(res.locals.condition){
-            AllCustomers = await connection.query('SELECT * FROM customers WHERE cpf LIKE $1%',[res.locals.condition])
+            AllCustomers = await connection.query('SELECT * FROM customers WHERE cpf LIKE $1',[`${res.locals.condition}%`])
         } else {
             AllCustomers = await connection.query('SELECT * FROM customers')
         }
@@ -48,6 +48,7 @@ export async function modifyCustomer(req,res) {
     try {
         await connection.query('UPDATE customers SET name=$1,phone=$2,cpf=$3,birthday=$4 WHERE id=$5',
         [customer.name,customer.phone,customer.cpf,customer.birthday,id])
+        res.sendStatus(200)
     } catch (error) {
         console.log(error)
         res.sendStatus(500)
