@@ -7,6 +7,6 @@ const router = Router()
 router.get('/rentals',listRentals);
 router.post('/rentals',rentalVerify,createRental);
 router.post('/rentals/:id/return',checkConclusion,concludeRental);
-router.delete('/rentals/:id',deleteRental)
+router.delete('/rentals/:id',checkConclusion,deleteRental)
 
 export default router

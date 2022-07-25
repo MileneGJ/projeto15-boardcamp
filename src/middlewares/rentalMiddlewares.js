@@ -14,7 +14,7 @@ export async function rentalVerify (req,res,next) {
     [req.body.customerId])
     if(!foundGame.rows[0]||!foundUser.rows[0]){
         return res.send('Usuário ou jogo inexistente').status(400);
-    } else if(foundGame.rows.stockTotal<1) {
+    } else if(foundGame.rows[0].stockTotal<1) {
         return res.send('Jogo sem estoque').status(400);
     }
      else {
@@ -23,7 +23,8 @@ export async function rentalVerify (req,res,next) {
             rentDate: new Date(),
             originalPrice: req.body.daysRented*foundGame.pricePerDay,
             returnDate: null,
-            delayFee: null
+            delayFee: null,
+            gameStock:foundGame.rows[0].stockTotal
         }
         next()
     }
@@ -37,13 +38,17 @@ export async function checkConclusion (req,res,next) {
     const id = req.params.id
     try {
         const foundRental = connection.query(
-            'SELECT rentals.*,games.pricePerDay as "gamePrice" FROM rentals JOIN games ON rentals."gameId"=games.id WHERE id=$1',[id]);
+            `SELECT rentals.*,
+            games."pricePerDay" as "gamePrice",
+            games."stockTotal" as "gameStock" 
+            FROM rentals 
+            JOIN games ON rentals."gameId"=games.id WHERE id=$1`,[id]);
         if(!foundRental.rows[0]){
             return res.sendStatus(404);
-        } else if(foundRental.rows.returnDate){
+        } else if(foundRental.rows[0].returnDate){
             return res.sendStatus(400);
         } else {
-            res.locals.foundRental = foundRental
+            res.locals.foundRental = foundRental.rows[0]
             next()
         }
     } catch (error) {
